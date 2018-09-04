@@ -1,60 +1,41 @@
 <template>
-  <div id="app">
-    <button @click="handleClick">click</button>
-    <mt-popup
-      v-model="popupVisible"
-      pop-transition="popup-fade"
-      position="bottom">
-      <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
-    </mt-popup>
+  <div>
+    {{currentDate}}
+    <van-popup v-model="show">
+      <van-datetime-picker
+        v-model="currentDate"
+        type="date"
+        @confirm="confirm"
+        @cancel="cancel"
+      />
+    </van-popup>
+    <button @click="openPicker">openPicker</button>
   </div>
 </template>
 
 <script>
-
-export default {
-  name: 'app',
-  data() {
-    return {
-      popupVisible: false,
-      slots: [
-        {
-          flex: 1,
-          values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
-          className: 'slot1',
-          textAlign: 'right'
-        }, {
-          divider: true,
-          content: '-',
-          className: 'slot2'
-        }, {
-          flex: 1,
-          values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
-          className: 'slot3',
-          textAlign: 'left'
-        }
-      ]
-    };
-  },
-  methods: {
-    handleClick() {
-      this.popupVisible = true;
+  export default {
+    name: 'index',
+    data() {
+      return {
+        currentDate: new Date(),
+        oldTime: new Date(),
+        show: false,
+      };
     },
-    onValuesChange(picker, checked) {
-      if (!this.popupVisible) return;
-      console.log(picker, checked);
+    methods: {
+      confirm() {
+        this.show = false;
+      },
+      cancel() {
+        this.currentDate = this.oldTime;
+        this.show = false;
+      },
+      openPicker() {
+        this.oldTime = this.currentDate;
+        this.show = true;
+      },
     }
   }
-}
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
